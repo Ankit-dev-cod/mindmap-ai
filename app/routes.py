@@ -2,6 +2,10 @@ from flask import Blueprint, request, jsonify
 
 main = Blueprint('main', __name__)
 
+@main.route('/')
+def home():
+    return "Welcome to Mindmap AI! Your app is running successfully."
+
 @main.route('/upload', methods=['POST'])
 def upload_pdf():
     file = request.files['file']
