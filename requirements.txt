@@ -1,8 +1,9 @@
 flask
 pdfplumber
+transformers
+torch
 spacy
 networkx
 matplotlib
 pillow
 gunicorn
-openai

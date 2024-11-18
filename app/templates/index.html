@@ -5,19 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mindmap AI</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        #progressBar {
-            width: 0%;
-            height: 25px;
-            background-color: green;
-            text-align: center;
-            color: white;
-        }
-        #progressContainer {
-            width: 100%;
-            background-color: #ccc;
-        }
-    </style>
 </head>
 <body>
     <div class="container mt-5">
@@ -28,9 +15,6 @@
             <div class="form-group">
                 <label for="file">Upload a PDF:</label>
                 <input type="file" class="form-control" id="file" name="file" accept=".pdf" required>
-            </div>
-            <div id="progressContainer" class="mt-3">
-                <div id="progressBar">0%</div>
             </div>
             <button type="submit" class="btn btn-primary mt-3">Upload</button>
         </form>
@@ -48,7 +32,7 @@
     </div>
 
     <script>
-        // Handle file upload with progress bar
+        // Handle file upload
         document.getElementById('uploadForm').addEventListener('submit', async (event) => {
             event.preventDefault();
             const fileInput = document.getElementById('file');
@@ -57,27 +41,8 @@
             const formData = new FormData();
             formData.append('file', fileInput.files[0]);
             
-            const progressBar = document.getElementById('progressBar');
-            progressBar.style.width = '0%';
-            progressBar.textContent = '0%';
-            
-            // Simulate progress
-            let progress = 0;
-            const interval = setInterval(() => {
-                if (progress >= 90) {
-                    clearInterval(interval);
-                } else {
-                    progress += 10;
-                    progressBar.style.width = progress + '%';
-                    progressBar.textContent = progress + '%';
-                }
-            }, 300);
-
             const response = await fetch('/upload', { method: 'POST', body: formData });
             const result = await response.json();
-            clearInterval(interval);
-            progressBar.style.width = '100%';
-            progressBar.textContent = '100%';
             document.getElementById('response').textContent = JSON.stringify(result, null, 2);
         });
 

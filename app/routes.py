@@ -1,5 +1,10 @@
 from flask import Blueprint, request, jsonify, render_template
 import os
+import pdfplumber
+from transformers import pipeline
+
+# Initialize the model pipeline
+gpt_pipeline = pipeline("text-generation", model="EleutherAI/gpt-neo-1.3B")
 
 main = Blueprint('main', __name__)
 
@@ -14,15 +19,21 @@ def upload_pdf():
         return jsonify({"error": "No file uploaded"}), 400
     file_path = os.path.join("uploads", file.filename)
     file.save(file_path)
-    # Simulate processing delay
-    import time
-    time.sleep(2)
-    return jsonify({"message": "File uploaded successfully", "file": file.filename})
+
+    # Extract text from PDF
+    extracted_text = ""
+    with pdfplumber.open(file_path) as pdf:
+        for page in pdf.pages:
+            extracted_text += page.extract_text() + "\n"
+
+    # Generate response using GPT-Neo
+    response = gpt_pipeline(extracted_text[:500], max_length=100, num_return_sequences=1)
+    return jsonify({"message": "File processed successfully", "response": response[0]['generated_text']})
 
 @main.route('/ask_gpt', methods=['POST'])
 def ask_gpt():
     question = request.json.get("question")
     if not question:
         return jsonify({"error": "No question provided"}), 400
-    # Simulated GPT response
-    return jsonify({"response": f"Simulated GPT response for: {question}"})
+    response = gpt_pipeline(question, max_length=100, num_return_sequences=1)
+    return jsonify({"response": response[0]['generated_text']})
