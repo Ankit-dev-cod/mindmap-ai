@@ -4,7 +4,7 @@ import pdfplumber
 from transformers import pipeline
 
 # Initialize the model pipeline
-gpt_pipeline = pipeline("text-generation", model="EleutherAI/gpt-neo-1.3B")
+gpt_pipeline = pipeline("text-generation", model="EleutherAI/gpt-neo-125M")
 
 main = Blueprint('main', __name__)
 
