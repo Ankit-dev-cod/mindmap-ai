@@ -4,5 +4,5 @@ import os
 app = create_app()
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))  # Default a 5000 se la variabile PORT non è definita
+    port = int(os.environ.get('PORT', 5000))  # Porta dinamica
     app.run(host='0.0.0.0', port=port)
